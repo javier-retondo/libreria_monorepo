@@ -12,7 +12,7 @@ Este proyecto es un monorepo compuesto de dos proyectos: Backend y Frontend para
 
 ---
 
-## 🐳 Ejecución con Docker (recomendado)
+## 🐳 Ejecución con Docker (recomendado) -> Genera y levanta Back y Front
 
 1. **Construcción y ejecución del contenedor**:
 
@@ -44,19 +44,27 @@ Este proyecto es un monorepo compuesto de dos proyectos: Backend y Frontend para
 
 ## 🛠️ Ejecución local (sin Docker)
 
-1. Instalá globalmente las siguientes herramientas si no las tenés:
+### Backend:
+
+1. Ingresa a la carpeta de backend:
+
+   ```bash
+   cd backend
+   ```
+
+2. Instalá globalmente las siguientes herramientas si no las tenés:
 
    ```bash
    npm install -g ts-node nodemon typescript
    ```
 
-2. Instalá las dependencias del proyecto:
+3. Instalá las dependencias del proyecto:
 
    ```bash
    npm install
    ```
 
-3. Asegurate de tener una base de datos MySQL disponible (local o remota) y actualizá el archivo `.env` con los datos de conexión:
+4. Asegurate de tener una base de datos MySQL disponible (local o remota) y actualizá el archivo `.env` con los datos de conexión:
 
    ```env
    DB_HOST=localhost
@@ -66,9 +74,33 @@ Este proyecto es un monorepo compuesto de dos proyectos: Backend y Frontend para
    DB_PORT=3307
    ```
 
+5. Corre la aplicación:
+   ```bash
+   npm run dev
+   ```
+
+## Frontend
+
+1. Ingresa a la carpeta de frontend:
+
+   ```bash
+   cd frontend
+   ```
+
+2. Instalá las dependencias del proyecto:
+
+   ```bash
+   npm install
+   ```
+
+3. Corre la aplicación:
+   ```bash
+   npm run dev
+   ```
+
 ---
 
-## 🛠️ Inicializacióm de la aplicación
+## 🛠️ Inicializacióm de los datos
 
 1. Lo primero que debe hacer una vez iniciada la aplicación, desde otra terminal, es ejecutar la sincronización de los modelos del sistema:
 
