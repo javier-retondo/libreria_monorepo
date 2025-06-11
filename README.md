@@ -1,6 +1,6 @@
 # 📚 Librería
 
-Este proyecto corresponde al backend de la aplicación de gestión de una librería. Está desarrollado en Node.js y TypeScript, y puede ejecutarse tanto con Docker como de forma local.
+Este proyecto es un monorepo compuesto de dos proyectos: Backend y Frontend para la gestión de una web destinada a la venta de libros
 
 ---
 
