@@ -1,0 +1,236 @@
+[
+  {
+    "id": 1,
+    "titulo": "Cien años de soledad",
+    "descripcion": "Una novela emblemática de Gabriel García Márquez, que narra la historia de la familia Buendía en el pueblo ficticio de Macondo.",
+    "precio": 3500,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 1,
+      "nombre": "Gabriel García Márquez",
+      "biografia": "Escritor colombiano, uno de los más importantes del siglo XX.",
+      "fecha_nacimiento": "1927-03-06",
+      "nacionalidad": "Colombiana"
+    },
+    "categorias": [
+      {
+        "id": 1,
+        "nombre": "Ficción",
+        "descripcion": "Narraciones inventadas que pueden incluir elementos fantásticos o realistas."
+      },
+      {
+        "id": 2,
+        "nombre": "Realismo mágico",
+        "descripcion": "Género literario que combina la realidad con elementos fantásticos, característico de la literatura latinoamericana."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Rayuela",
+    "descripcion": "Una novela innovadora de Julio Cortázar, que permite múltiples lecturas y es un referente del realismo mágico.",
+    "precio": 3200,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 2,
+      "nombre": "Julio Cortázar",
+      "biografia": "Escritor argentino, uno de los más destacados del siglo XX.",
+      "fecha_nacimiento": "1914-08-26",
+      "nacionalidad": "Argentina"
+    },
+    "categorias": [
+      {
+        "id": 1,
+        "nombre": "Ficción",
+        "descripcion": "Narraciones inventadas que pueden incluir elementos fantásticos o realistas."
+      },
+      {
+        "id": 2,
+        "nombre": "Realismo mágico",
+        "descripcion": "Género literario que combina la realidad con elementos fantásticos, característico de la literatura latinoamericana."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "titulo": "El Principito",
+    "descripcion": "Un clásico de la literatura infantil escrito por Antoine de Saint-Exupéry, que aborda temas profundos a través de la mirada de un niño.",
+    "precio": 2800,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 3,
+      "nombre": "Antoine de Saint-Exupéry",
+      "biografia": "Escritor y aviador francés, conocido por su obra El Principito.",
+      "fecha_nacimiento": "1900-06-29",
+      "nacionalidad": "Francesa"
+    },
+    "categorias": [
+      {
+        "id": 3,
+        "nombre": "Literatura infantil",
+        "descripcion": "Obras escritas para un público joven, que suelen incluir ilustraciones y enseñanzas morales."
+      },
+      {
+        "id": 4,
+        "nombre": "Fábulas",
+        "descripcion": "Narraciones breves que transmiten una enseñanza o moraleja, a menudo con animales como protagonistas."
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "titulo": "Cien años de soledad",
+    "descripcion": "Una novela emblemática de Gabriel García Márquez, que narra la historia de la familia Buendía en el pueblo ficticio de Macondo.",
+    "precio": 3500,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 1,
+      "nombre": "Gabriel García Márquez",
+      "biografia": "Escritor colombiano, uno de los más importantes del siglo XX.",
+      "fecha_nacimiento": "1927-03-06",
+      "nacionalidad": "Colombiana"
+    },
+    "categorias": [
+      {
+        "id": 1,
+        "nombre": "Ficción",
+        "descripcion": "Narraciones inventadas que pueden incluir elementos fantásticos o realistas."
+      },
+      {
+        "id": 2,
+        "nombre": "Realismo mágico",
+        "descripcion": "Género literario que combina la realidad con elementos fantásticos, característico de la literatura latinoamericana."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Rayuela",
+    "descripcion": "Una novela innovadora de Julio Cortázar, que permite múltiples lecturas y es un referente del realismo mágico.",
+    "precio": 3200,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 2,
+      "nombre": "Julio Cortázar",
+      "biografia": "Escritor argentino, uno de los más destacados del siglo XX.",
+      "fecha_nacimiento": "1914-08-26",
+      "nacionalidad": "Argentina"
+    },
+    "categorias": [
+      {
+        "id": 1,
+        "nombre": "Ficción",
+        "descripcion": "Narraciones inventadas que pueden incluir elementos fantásticos o realistas."
+      },
+      {
+        "id": 2,
+        "nombre": "Realismo mágico",
+        "descripcion": "Género literario que combina la realidad con elementos fantásticos, característico de la literatura latinoamericana."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "titulo": "El Principito",
+    "descripcion": "Un clásico de la literatura infantil escrito por Antoine de Saint-Exupéry, que aborda temas profundos a través de la mirada de un niño.",
+    "precio": 2800,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 3,
+      "nombre": "Antoine de Saint-Exupéry",
+      "biografia": "Escritor y aviador francés, conocido por su obra El Principito.",
+      "fecha_nacimiento": "1900-06-29",
+      "nacionalidad": "Francesa"
+    },
+    "categorias": [
+      {
+        "id": 3,
+        "nombre": "Literatura infantil",
+        "descripcion": "Obras escritas para un público joven, que suelen incluir ilustraciones y enseñanzas morales."
+      },
+      {
+        "id": 4,
+        "nombre": "Fábulas",
+        "descripcion": "Narraciones breves que transmiten una enseñanza o moraleja, a menudo con animales como protagonistas."
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "titulo": "Cien años de soledad",
+    "descripcion": "Una novela emblemática de Gabriel García Márquez, que narra la historia de la familia Buendía en el pueblo ficticio de Macondo.",
+    "precio": 3500,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 1,
+      "nombre": "Gabriel García Márquez",
+      "biografia": "Escritor colombiano, uno de los más importantes del siglo XX.",
+      "fecha_nacimiento": "1927-03-06",
+      "nacionalidad": "Colombiana"
+    },
+    "categorias": [
+      {
+        "id": 1,
+        "nombre": "Ficción",
+        "descripcion": "Narraciones inventadas que pueden incluir elementos fantásticos o realistas."
+      },
+      {
+        "id": 2,
+        "nombre": "Realismo mágico",
+        "descripcion": "Género literario que combina la realidad con elementos fantásticos, característico de la literatura latinoamericana."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "titulo": "Rayuela",
+    "descripcion": "Una novela innovadora de Julio Cortázar, que permite múltiples lecturas y es un referente del realismo mágico.",
+    "precio": 3200,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 2,
+      "nombre": "Julio Cortázar",
+      "biografia": "Escritor argentino, uno de los más destacados del siglo XX.",
+      "fecha_nacimiento": "1914-08-26",
+      "nacionalidad": "Argentina"
+    },
+    "categorias": [
+      {
+        "id": 1,
+        "nombre": "Ficción",
+        "descripcion": "Narraciones inventadas que pueden incluir elementos fantásticos o realistas."
+      },
+      {
+        "id": 2,
+        "nombre": "Realismo mágico",
+        "descripcion": "Género literario que combina la realidad con elementos fantásticos, característico de la literatura latinoamericana."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "titulo": "El Principito",
+    "descripcion": "Un clásico de la literatura infantil escrito por Antoine de Saint-Exupéry, que aborda temas profundos a través de la mirada de un niño.",
+    "precio": 2800,
+    "imagen_url": "https://covers.openlibrary.org/b/id/11183184-L.jpg",
+    "autor": {
+      "id": 3,
+      "nombre": "Antoine de Saint-Exupéry",
+      "biografia": "Escritor y aviador francés, conocido por su obra El Principito.",
+      "fecha_nacimiento": "1900-06-29",
+      "nacionalidad": "Francesa"
+    },
+    "categorias": [
+      {
+        "id": 3,
+        "nombre": "Literatura infantil",
+        "descripcion": "Obras escritas para un público joven, que suelen incluir ilustraciones y enseñanzas morales."
+      },
+      {
+        "id": 4,
+        "nombre": "Fábulas",
+        "descripcion": "Narraciones breves que transmiten una enseñanza o moraleja, a menudo con animales como protagonistas."
+      }
+    ]
+  }
+]
