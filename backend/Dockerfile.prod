@@ -7,7 +7,7 @@ RUN npm install --production
 
 COPY . .
 
+RUN npm install pm2 typescript@5.7.3 -g
 RUN npm run build
-RUN npm install pm2 -g
 
 CMD ["pm2-runtime", "dist/index.js"]
