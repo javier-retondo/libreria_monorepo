@@ -18,6 +18,11 @@ async function seed() {
   console.log('Iniciando el proceso de seed...');
   initAssociations();
   await seedSuperUser();
+  await seedCategories();
+  await seedAuthors();
+  await seedBooks();
+  console.log('Proceso de seed completado.');
+  console.log('-----------------------------------');
 
   console.log('Todos los datos han sido sembrados correctamente.');
   process.exit();
