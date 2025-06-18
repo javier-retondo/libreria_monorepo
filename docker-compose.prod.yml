@@ -19,5 +19,5 @@ services:
       dockerfile: Dockerfile.prod
     container_name: tienda_frontend
     ports:
-      - '3100:3000'
+      - '3100:80'
     restart: unless-stopped
