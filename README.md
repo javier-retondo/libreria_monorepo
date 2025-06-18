@@ -67,11 +67,29 @@ Este proyecto es un monorepo compuesto de dos proyectos: Backend y Frontend para
 4. Asegurate de tener una base de datos MySQL disponible (local o remota) y actualizá el archivo `.env` con los datos de conexión:
 
    ```env
-   DB_HOST=localhost
-   DB_USER=user
-   DB_PASSWORD=password
-   DB_NAME=tienda_libros
-   DB_PORT=3307
+      PORT=3001
+
+      DB_HOST=localhost
+      DB_USER=
+      DB_PASSWORD=
+      DB_NAME=tienda_libros
+      DB_PORT=3306
+
+      JWT_SECRET=
+
+      API_BASE_URL_V1=/api/v1
+
+      SMTP_HOST=
+      SMTP_PORT=465
+      SMTP_USER=example@example.com.ar
+      SMTP_PASS=
+      SMTP_NAME=Librería <example@example.com.ar>
+      SMTP_SECURE=true
+
+      SUPER_ADMIN_NAME=admin
+      SUPER_ADMIN_EMAIL=example@example.com.ar
+
+      BASE_URL=http://localhost:3001
    ```
 
 5. Corre la aplicación:
