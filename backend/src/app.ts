@@ -38,7 +38,7 @@ export class Server {
     this.app.use(express.urlencoded({ extended: false }));
   }
   routes() {
-    this.app.use('/static', express.static(staticFolderPath));
+    this.app.use('/api/static', express.static(staticFolderPath));
     Routes.forEach(([path, router]) => {
       this.app.use(this.apiBaseUrlV1 + path, router);
     });
