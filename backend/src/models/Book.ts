@@ -11,6 +11,10 @@ interface IBook {
   precio: number;
   imagen_url: string;
   autor_id: number;
+
+  // Relaciones
+  autor?: Author;
+  categorias?: Category[];
 }
 
 type BookCreationAttributes = Optional<IBook, 'id'>;

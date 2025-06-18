@@ -3,7 +3,7 @@ import { Category, ICategory } from '../models';
 
 const createCategory = async (
   nombre: string,
-  descripcion: string,
+  descripcion: string = '',
 ): Promise<ICategory> => {
   const category = await Category.create({ nombre, descripcion });
   return category.dataValues;

@@ -1,10 +1,37 @@
 import { Box, Typography, Grid } from '@mui/material';
 import { BookComponent } from '../../../components/Book';
-import books from '../../../api/mock/books.json';
-
-const featuredBooks = books.slice(0, 6);
+import { useContext, useEffect, useState } from 'react';
+import GeneralContext from '../../../context/GeneralContext';
+import { getLibros } from '../../../api/Books';
+import type { Book } from '../../../types/Entities';
 
 const FeaturedBooks = () => {
+  const [featuredBooks, setFeaturedBooks] = useState<Book[]>([]);
+
+  const { alert, setLoading } = useContext(GeneralContext);
+
+  const handleGetFeaturedBooks = async () => {
+    setLoading(true);
+    try {
+      await getLibros(
+        { page: 1, pageSize: 6, sortBy: 'titulo', sortOrder: 'ASC' },
+        {},
+      ).then((response) => {
+        setFeaturedBooks(response.rows);
+      });
+    } catch (error) {
+      alert('Error al obtener los libros destacados', 'error');
+      console.error('Error fetching featured books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetFeaturedBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box sx={{ py: 8 }}>
       <Typography variant="h4" align="center" gutterBottom>

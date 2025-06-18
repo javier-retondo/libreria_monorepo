@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../database';
 import { User } from './User';
-import { OrderItem } from './OrderDetail';
+import { IOrderItem, OrderItem } from './OrderDetail';
 
 enum OrderStatus {
   PENDING = 'pendiente',
@@ -18,7 +18,7 @@ interface IOrder {
   direccion: string;
   detalles: string;
 
-  items?: OrderItem[];
+  items?: IOrderItem[];
 }
 
 type OrderCreationAttributes = Optional<IOrder, 'id'>;

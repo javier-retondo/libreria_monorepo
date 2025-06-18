@@ -10,6 +10,7 @@ import sequelize from './database';
 import { error } from './utils/network/responses';
 import * as dotenv from 'dotenv';
 import { join } from 'path';
+import { Routes } from './routes';
 
 dotenv.config({
   path: join(__dirname, '..', '.env'),
@@ -19,7 +20,7 @@ const staticFolderPath = join(__dirname, '..', 'public');
 
 export class Server {
   public app: express.Application;
-  public port: number = Number(process.env.PORT) || 3000;
+  public port: number = Number(process.env.PORT) || 3001;
   public apiBaseUrlV1 = process.env.API_BASE_URL_V1 || '/api/v1';
 
   constructor() {
@@ -38,6 +39,9 @@ export class Server {
   }
   routes() {
     this.app.use('/static', express.static(staticFolderPath));
+    Routes.forEach(([path, router]) => {
+      this.app.use(this.apiBaseUrlV1 + path, router);
+    });
     this.app.use(
       (
         err: ErrorRequestHandler,
@@ -48,11 +52,11 @@ export class Server {
     );
   }
 
-  /*
   routers_v1(): express.Router[] {
-    return Routes;
+    return Routes.map(([path, router]) =>
+      this.app.use(this.apiBaseUrlV1 + path, router),
+    );
   }
-*/
 
   handleConn = async () => {
     console.log('Connecting to the database...');

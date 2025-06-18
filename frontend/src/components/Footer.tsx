@@ -20,7 +20,7 @@ const Footer = () => {
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 4 }}>
             <Typography variant="h6" gutterBottom>
-              Tienda de Libros
+              Librería Aurora
             </Typography>
             <Typography variant="body2">
               Tu lugar para descubrir y disfrutar de la lectura. Envíos a todo
@@ -95,7 +95,7 @@ const Footer = () => {
 
         <Box mt={4} textAlign="center">
           <Typography variant="body2">
-            &copy; {new Date().getFullYear()} Tienda de Libros. Todos los
+            &copy; {new Date().getFullYear()} Librería Aurora. Todos los
             derechos reservados.
           </Typography>
         </Box>

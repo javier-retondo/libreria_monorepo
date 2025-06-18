@@ -4,32 +4,39 @@ import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
-import { useContext, useState } from 'react';
-import books from '../../api/mock/books.json';
+import { useContext, useEffect, useState } from 'react';
 import { BookComponent } from '../../components/Book';
-import GeneralContext from '../../context/general';
 import Pagination from '@mui/material/Pagination';
+import GeneralContext from '../../context/GeneralContext';
+import type { Book } from '../../types/Entities';
+import { getLibros } from '../../api/Books';
 
 const Catalog = () => {
+  const uriSearch = new URLSearchParams(window.location.search).get('search');
+  const initialSearch = uriSearch ? decodeURIComponent(uriSearch) : '';
   const [category, setCategory] = useState('');
   const [author, setAuthor] = useState('');
   const [page, setPage] = useState(1);
+  const [books, setBooks] = useState<Book[]>([]);
 
-  const { search } = useContext(GeneralContext);
+  const { navbarText, setNavbarText, alert, setLoading } =
+    useContext(GeneralContext);
 
   const categories = Array.from(
-    new Set(books.flatMap((b) => b.categorias.map((c) => c.nombre))),
+    new Set(
+      books.flatMap((b) => b.categorias && b.categorias.map((c) => c.nombre)),
+    ),
   );
 
   const authors = Array.from(new Set(books.map((b) => b.autor.nombre)));
 
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
-      book.titulo.toLowerCase().includes(search.toLowerCase()) ||
-      book.autor.nombre.toLowerCase().includes(search.toLowerCase());
+      book.titulo.toLowerCase().includes(navbarText.toLowerCase()) ||
+      book.autor.nombre.toLowerCase().includes(navbarText.toLowerCase());
 
     const matchesCategory = category
-      ? book.categorias.some((c) => c.nombre === category)
+      ? book.categorias && book.categorias.some((c) => c.nombre === category)
       : true;
 
     const matchesAuthor = author ? book.autor.nombre === author : true;
@@ -42,13 +49,44 @@ const Catalog = () => {
 
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // opcional
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const paginatedBooks = filteredBooks.slice(
     (page - 1) * booksPerPage,
     page * booksPerPage,
   );
+
+  const fetchLibros = async () => {
+    const pagination = {
+      page: 1,
+      pageSize: 10000,
+      sortBy: 'titulo' as keyof Book,
+      sortOrder: 'ASC' as 'ASC' | 'DESC',
+    };
+    const filters = {};
+    setLoading(true);
+    await getLibros(pagination, filters)
+      .then((res) => {
+        setBooks(res.rows);
+      })
+      .catch((error) => {
+        alert('Error al obtener los libros', 'error');
+        console.error('Error fetching books:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    setNavbarText(initialSearch);
+    setCategory('');
+    setAuthor('');
+    setPage(1);
+    fetchLibros();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSearch, setNavbarText]);
 
   return (
     <Box>

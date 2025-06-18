@@ -7,14 +7,18 @@ import { join } from 'path';
 import { copyFileSync } from 'fs';
 import sequelize from '.';
 import { createBook } from '../services/Book';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: join(__dirname, '..', '..', '.env'),
+});
 
 async function seed() {
+  console.log('join(__dirn ', join(__dirname, '..', '..', '.env'));
   console.log('Iniciando el proceso de seed...');
   initAssociations();
   await seedSuperUser();
-  await seedCategories();
-  await seedAuthors();
-  await seedBooks();
+
   console.log('Todos los datos han sido sembrados correctamente.');
   process.exit();
 }
@@ -22,7 +26,7 @@ async function seed() {
 async function seedSuperUser() {
   console.log('Creando Super Usuario...');
   const name = process.env.SUPER_ADMIN_NAME || 'admin';
-  const email = process.env.SUPER_ADMIN_EMAIL || 'admin@example.com';
+  const email = process.env.SUPER_ADMIN_EMAIL || 'info@javier-retondo.ar';
 
   const userExists = await getUserByEmail(email);
   if (userExists) {

@@ -5,15 +5,61 @@ import {
   Typography,
   Button,
   CardActions,
+  IconButton,
+  Box,
 } from '@mui/material';
-import type { Book } from '../types';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import type { Book } from '../types/Entities';
+import CartContext from '../context/CartContext';
+import { useContext } from 'react';
+import GeneralContext from '../context/GeneralContext';
 
 interface Props {
   book: Book;
   onClick?: (book: Book) => void;
 }
 
-export const BookComponent = ({ book, onClick }: Props) => {
+const apiUrl = import.meta.env.VITE_BASE_URL || 'http://localhost:3001';
+
+export const BookComponent = ({ book }: Props) => {
+  const { cart, addToCart, removeFromCart, setCart } = useContext(CartContext);
+  const { alert } = useContext(GeneralContext);
+
+  const cartItem = cart.find((item) => item.book.id === book.id);
+
+  const increment = () => {
+    if (cartItem) {
+      const updated = cart.map((item) =>
+        item.book.id === book.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
+      );
+      setCart(updated);
+      alert(`Se ha agregado ${book.titulo} al carrito`, 'success');
+    } else {
+      addToCart({ book, quantity: 1 });
+      alert(`Se ha agregado ${book.titulo} al carrito`, 'success');
+    }
+  };
+
+  const decrement = () => {
+    if (cartItem && cartItem.quantity > 1) {
+      const updated = cart.map((item) =>
+        item.book.id === book.id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item,
+      );
+      setCart(updated);
+      alert(
+        `Se ha reducido la cantidad de ${book.titulo} en el carrito`,
+        'success',
+      );
+    } else {
+      if (book && book.id) removeFromCart(book.id);
+    }
+  };
+
   return (
     <Card
       sx={{
@@ -27,7 +73,7 @@ export const BookComponent = ({ book, onClick }: Props) => {
     >
       <CardMedia
         component="img"
-        image={book.imagen_url}
+        image={apiUrl + book.imagen_url}
         alt={book.titulo}
         sx={{ height: 220, objectFit: 'cover' }}
       />
@@ -43,9 +89,32 @@ export const BookComponent = ({ book, onClick }: Props) => {
         </Typography>
       </CardContent>
       <CardActions sx={{ p: 2 }}>
-        <Button fullWidth variant="contained" onClick={() => onClick?.(book)}>
-          Agregar al carrito
-        </Button>
+        {!cartItem ? (
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={increment}
+            color="primary"
+          >
+            Agregar al carrito
+          </Button>
+        ) : (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            gap={1}
+          >
+            <IconButton color="primary" onClick={decrement}>
+              <RemoveIcon />
+            </IconButton>
+            <Typography>{cartItem.quantity}</Typography>
+            <IconButton color="primary" onClick={increment}>
+              <AddIcon />
+            </IconButton>
+          </Box>
+        )}
       </CardActions>
     </Card>
   );

@@ -81,7 +81,7 @@ const getBooks = async (
     sortOrder = 'ASC',
   } = pagination;
 
-  let where: WhereOptions<IBook> = [];
+  const where: WhereOptions<IBook> = [];
 
   if (search) {
     where.push({
@@ -108,21 +108,23 @@ const getBooks = async (
   const booksWithCategories = await Book.findAndCountAll({
     where,
     attributes,
-    include: [
-      {
-        model: Category,
-        as: 'categorias',
-        attributes: [],
-        required: categorias && categorias.length > 0,
-        where:
-          categorias && categorias.length > 0
-            ? {
-                categoria_id: { [Op.in]: categorias },
-              }
-            : undefined,
-      },
-    ],
-    raw: true,
+    include:
+      categorias && categorias.length > 0
+        ? [
+            {
+              model: Category,
+              as: 'categorias',
+              attributes: [],
+              required: true,
+              where:
+                categorias && categorias.length > 0
+                  ? {
+                      id: { [Op.in]: categorias },
+                    }
+                  : undefined,
+            },
+          ]
+        : [],
     order: [[sortBy, sortOrder]],
     offset: (page - 1) * pageSize,
     limit: pageSize,
@@ -140,6 +142,7 @@ const getBooks = async (
         model: Category,
         as: 'categorias',
         through: { attributes: [] },
+        required: false,
       },
     ],
   });

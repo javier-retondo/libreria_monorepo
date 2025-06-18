@@ -8,10 +8,14 @@ import {
   OrderStatus,
   User,
 } from '../models';
+import ejs from 'ejs';
+import sendEmail from '../utils/mailer';
+import { getUserById } from './User';
+import { join } from 'path';
 
 const createOrder = async (
   orderData: IOrder,
-  items: IOrderItem[],
+  items: Omit<IOrderItem, 'orden_id'>[],
 ): Promise<IOrder> => {
   const transaction = await sequelize.transaction();
   const order = await Order.create(orderData, { transaction });
@@ -33,21 +37,51 @@ const createOrder = async (
   }
   await transaction.commit();
 
+  const user = await getUserById(order.dataValues.usuario_id);
+
+  const orderCompleteData: IOrder = await getOrderById(
+    order.dataValues.id as number,
+  );
+
+  const total =
+    orderCompleteData && orderCompleteData.items
+      ? orderCompleteData.items.reduce(
+          (acc, i) => acc + i.precio * i.cantidad,
+          0,
+        )
+      : 0;
+
+  const dataMail = {
+    nombreUsuario: user?.nombre || 'Usuario',
+    baseUrl: process.env.BASE_URL || 'http://localhost:3001',
+    pedido: {
+      id: orderCompleteData.id,
+      fecha: new Date(orderCompleteData.fecha).toLocaleDateString(),
+      provincia: orderCompleteData.provincia,
+      direccion: orderCompleteData.direccion,
+      detalles: orderCompleteData.detalles || 'Sin detalles',
+      items: orderCompleteData.items,
+    },
+    total,
+  };
+  const html = await ejs.renderFile(join('templates', 'order.ejs'), dataMail);
+  user && (await sendEmail(user.email, 'Detalles de tu Pedido', html));
+
   return await getOrderById(order.dataValues.id as number);
 };
 
 const getOrderById = async (id: number): Promise<IOrder> => {
   const order = await Order.findByPk(id, {
     include: [
-      { model: OrderItem, as: 'items' },
-      { model: User, as: 'usuario' },
+      { model: OrderItem, as: 'items', include: ['libro'] },
+      { model: User, as: 'usuario', attributes: ['id', 'nombre', 'email'] },
     ],
   });
   if (!order) {
     console.error(`Order with ID ${id} not found`);
     throw new Error(`Order with ID ${id} not found`);
   }
-  return order.dataValues;
+  return order.toJSON() as IOrder;
 };
 
 const getOrders = async (
@@ -57,9 +91,10 @@ const getOrders = async (
     sortBy: keyof IOrder;
     sortOrder: 'ASC' | 'DESC';
   },
-  estado: OrderStatus,
+  estado?: OrderStatus,
   usuario_id?: number[],
   libro_id?: number[],
+  date?: Date,
 ): Promise<{
   rows: IOrder[];
   count: number;
@@ -74,11 +109,15 @@ const getOrders = async (
   const where: WhereOptions<IOrder> = {};
 
   if (usuario_id && usuario_id.length > 0) {
-    where['id'] = usuario_id;
+    where['usuario_id'] = usuario_id;
   }
 
-  if (OrderStatus) {
+  if (estado) {
     where['estado'] = estado;
+  }
+
+  if (date) {
+    where['fecha'] = { [Op.eq]: date };
   }
 
   let ordersIds: number[] = [];
@@ -89,36 +128,47 @@ const getOrders = async (
   const ordersCount = await Order.findAndCountAll({
     where,
     attributes,
-    include: [
-      {
-        model: OrderItem,
-        as: 'items',
-        attributes: [],
-        where: [
+    include: libro_id
+      ? [
           {
-            producto_id:
-              libro_id && libro_id.length > 0
-                ? { [Op.in]: libro_id }
-                : undefined,
+            model: OrderItem,
+            as: 'items',
+            attributes: [],
+
+            where: [
+              {
+                libro_id: { [Op.in]: libro_id },
+              },
+            ],
           },
-        ],
-      },
-    ],
-    raw: true,
+        ]
+      : [],
     order: [[sortBy, sortOrder]],
     offset: (page - 1) * pageSize,
     limit: pageSize,
   });
 
-  ordersIds = ordersCount.rows.map((order) => order.dataValues.id as number);
+  ordersIds = ordersCount.rows
+    .filter(
+      (order) =>
+        order &&
+        order.dataValues.id !== null &&
+        order.dataValues.id !== undefined,
+    )
+    .map((order) => order.dataValues.id)
+    .filter((id): id is number => typeof id === 'number');
 
   const orders = await Order.findAndCountAll({
     where: { id: { [Op.in]: ordersIds } },
     order: [[sortBy, sortOrder]],
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
     include: [
-      { model: OrderItem, as: 'items' },
+      {
+        model: OrderItem,
+        as: 'items',
+        required: false,
+        separate: true,
+        include: ['libro'],
+      },
       {
         model: User,
         as: 'usuario',
@@ -128,7 +178,7 @@ const getOrders = async (
 
   return {
     rows: orders.rows.map((order) => order.dataValues),
-    count: orders.count,
+    count: ordersCount.count,
   };
 };
 
@@ -140,7 +190,25 @@ const updateStatus = async (
   if (order?.dataValues.estado !== OrderStatus.PENDING) {
     throw new Error("El estado de la orden tiene que ser 'pendiente'");
   }
+
   await order.update({ estado });
+
+  const orderCompleteData: IOrder = await getOrderById(id);
+
+  const html = await ejs.renderFile(join('templates', 'confirmation.ejs'), {
+    pedido: orderCompleteData,
+    estado: estado,
+    baseUrl: process.env.BASE_URL || 'http://localhost:3001',
+    mensaje:
+      estado === OrderStatus.COMPLETED
+        ? '¡Tu pedido ha sido completado y se encuentra en proceso de envío!'
+        : 'Tu pedido ha sido cancelado.',
+  });
+
+  const user = await getUserById(order.dataValues.usuario_id);
+
+  user && (await sendEmail(user.email, 'Confirmación de Pedido', html));
+
   return order.dataValues;
 };
 

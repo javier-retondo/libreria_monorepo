@@ -4,29 +4,36 @@ import { IUser, User, UserRole } from '../models';
 import { join } from 'path';
 import sendEmail from '../utils/mailer';
 import { Op, WhereOptions } from 'sequelize';
+import sequelize from '../database';
 
 const createUser = async (
   nombre: string,
   email: string,
   rol: UserRole,
 ): Promise<IUser> => {
+  const transaction = await sequelize.transaction();
   const password = Math.random().toString(36).slice(-8);
   const encryptedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({
-    nombre,
-    email,
-    password: encryptedPassword,
-    rol,
-    pass_provisional: true,
-  })
+  const user = await User.create(
+    {
+      nombre,
+      email,
+      password: encryptedPassword,
+      rol,
+      pass_provisional: true,
+    },
+    { transaction },
+  )
     .then((user) => {
       delete user.dataValues.password;
       return user.dataValues;
     })
-    .catch((error) => {
+    .catch(async (error) => {
+      await transaction.rollback();
       console.error('Error creating user:', error);
       throw new Error('Error creating user');
     });
+
   console.log(
     `User created: ${user.nombre} (${user.email}) with role ${user.rol}`,
   );
@@ -37,8 +44,17 @@ const createUser = async (
     password: password,
   });
 
-  await sendEmail(user.email, 'Bienvenido a la plataforma', html);
-  return user;
+  return await sendEmail(user.email, 'Bienvenido a la plataforma', html)
+    .then(async () => {
+      await transaction.commit();
+      delete user.password;
+      return user;
+    })
+    .catch(async (error) => {
+      console.error(`Error sending welcome email to ${user.email}:`, error);
+      await transaction.rollback();
+      throw new Error(`Error sending welcome email to ${user.email}`);
+    });
 };
 
 const updateUser = async (
@@ -52,49 +68,26 @@ const updateUser = async (
   }
   if (data.password) {
     data.password = await bcrypt.hash(data.password, 10);
+    data.pass_provisional = false;
   }
   await user.update(data);
   delete user.dataValues.password;
   return user.dataValues;
 };
 
-const resetUserPassword = async (id: number): Promise<IUser> => {
-  const user = await User.findByPk(id).then((user) => {
-    if (user) {
-      delete user.dataValues.password;
-      return user;
-    }
-    return null;
-  });
-  if (!user) {
-    console.error(`User with ID ${id} not found`);
-    throw new Error(`User with ID ${id} not found`);
-  }
-  const newPassword = Math.random().toString(36).slice(-8);
-  const encryptedPassword = await bcrypt.hash(newPassword, 10);
-  await user.update({
-    password: encryptedPassword,
-    pass_provisional: true,
-  });
-  delete user.dataValues.password;
-
-  const html = await ejs.renderFile(join('templates', 'welcome.ejs'), {
-    nombre: user.dataValues.nombre,
-    email: user.dataValues.email,
-    password: newPassword,
-  });
-
-  await sendEmail(user.dataValues.email, 'Bienvenido a la plataforma', html);
-
-  return user.dataValues;
-};
-
-const getUserByEmail = async (email: string): Promise<IUser | null> => {
+const getUserByEmail = async (
+  email: string,
+  auth: boolean = false,
+): Promise<IUser | null> => {
   const user = await User.findOne({
-    where: { email: { [Op.like]: `%${email}%` } },
+    where: auth
+      ? {
+          email: { [Op.eq]: email },
+        }
+      : { email: { [Op.like]: `%${email}%` } },
   });
   if (user) {
-    delete user.dataValues.password;
+    if (!auth) delete user.dataValues.password;
     return user.dataValues;
   }
   return null;
@@ -105,6 +98,18 @@ const getUserById = async (id: number): Promise<IUser | null> => {
   if (user) {
     delete user.dataValues.password;
     return user.dataValues;
+  }
+  return null;
+};
+
+const getUserModelById = async (
+  id: number,
+  auth: boolean = false,
+): Promise<User | null> => {
+  const user = await User.findByPk(id);
+  if (user) {
+    if (!auth) delete user.dataValues.password;
+    return user;
   }
   return null;
 };
@@ -175,9 +180,9 @@ const deleteUser = async (id: number): Promise<void> => {
 export {
   createUser,
   updateUser,
-  resetUserPassword,
   getUserByEmail,
   getUserById,
   getAllUsers,
   deleteUser,
+  getUserModelById,
 };

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmación de Pedido</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f6f9fc;
+        color: #333;
+        padding: 20px;
+      }
+      .container {
+        background-color: #ffffff;
+        border-radius: 6px;
+        padding: 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        font-weight: bold;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        color: white;
+      }
+      .status.confirmado {
+        background-color: #4caf50;
+      }
+      .status.cancelado {
+        background-color: #f44336;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        vertical-align: middle;
+      }
+      th {
+        background-color: #102f53;
+        color: white;
+        text-align: left;
+      }
+      img {
+        max-height: 60px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Confirmación de Pedido</h2>
+
+      <div
+        class="status <%= estado === 'completado' ? 'confirmado' : 'cancelado' %>"
+      >
+        Pedido <%= estado === 'completado' ? 'CONFIRMADO' : 'CANCELADO' %>
+      </div>
+
+      <p>Hola <strong><%= pedido.usuario.nombre %></strong>,</p>
+
+      <p>
+        Tu pedido ha sido
+        <strong><%= mensaje %></strong>.
+      </p>
+
+      <p><strong>Detalles del pedido:</strong></p>
+      <ul>
+        <li><strong>N° Pedido:</strong> <%= pedido.id %></li>
+        <li>
+          <strong>Fecha:</strong> <%= new
+          Date(pedido.fecha).toLocaleDateString() %>
+        </li>
+        <li>
+          <strong>Dirección:</strong> <%= pedido.direccion %>, <%=
+          pedido.provincia %>
+        </li>
+        <li><strong>Observaciones:</strong> <%= pedido.detalles %></li>
+      </ul>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Portada</th>
+            <th>Libro</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < pedido.items.length; i++) { const item =
+          pedido.items[i]; const libro = item.libro; %>
+          <tr>
+            <td>
+              <img
+                src="<%= baseUrl + libro.imagen_url %>"
+                alt="<%= libro.titulo %>"
+              />
+            </td>
+            <td><%= libro.titulo %></td>
+            <td><%= item.cantidad %></td>
+            <td>$<%= Number(item.precio).toFixed(2) %></td>
+            <td>$<%= Number(item.precio * item.cantidad).toFixed(2) %></td>
+          </tr>
+          <% } %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="4" style="text-align: right">Total:</th>
+            <th>
+              $<%= Number(pedido.items.reduce((acc, i) => acc + i.precio *
+              i.cantidad, 0)).toFixed(2) %>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+
+      <p style="margin-top: 30px">
+        Ante cualquier consulta, no dudes en contactarnos.
+      </p>
+      <p>— El equipo de Librería Aurora</p>
+    </div>
+  </body>
+</html>
